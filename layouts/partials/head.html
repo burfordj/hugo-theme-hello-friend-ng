@@ -53,6 +53,28 @@
 
 {{ template "_internal/opengraph.html" . }}
 
+{{ if .IsHome }}
+<script type="application/ld+json">
+{{ dict
+    "@context" "https://schema.org"
+    "@type" "Organization"
+    "name" .Site.Title
+    "url" .Site.BaseURL
+    "description" .Site.Params.description
+    "logo" (absURL "images/og-image.png")
+ | jsonify | safeJS }}
+</script>
+<script type="application/ld+json">
+{{ dict
+    "@context" "https://schema.org"
+    "@type" "WebSite"
+    "name" .Site.Title
+    "url" .Site.BaseURL
+    "description" .Site.Params.description
+ | jsonify | safeJS }}
+</script>
+{{ end }}
+
 {{ if .IsPage }}
 {{ if and .Params.og_image (not .Params.images) }}
 <meta property="og:image" content="{{ . | absURL }}" />
@@ -69,6 +91,22 @@
 {{ range .Params.categories }}
 <meta property="article:section" content="{{ . }}" />
 {{ end }}
+
+{{ $breadcrumbs := slice }}
+{{ $breadcrumbs = $breadcrumbs | append (dict "@type" "ListItem" "position" 1 "name" .Site.Title "item" .Site.BaseURL)
+}}
+{{ with .Site.GetPage "section" .Section }}
+{{ $breadcrumbs = $breadcrumbs | append (dict "@type" "ListItem" "position" 2 "name" .Title "item" .Permalink) }}
+{{ end }}
+{{ $breadcrumbs = $breadcrumbs | append (dict "@type" "ListItem" "position" (add (len $breadcrumbs) 1) "name" .Title
+"item" .Permalink) }}
+<script type="application/ld+json">
+{{ dict
+    "@context" "https://schema.org"
+    "@type" "BreadcrumbList"
+    "itemListElement" $breadcrumbs
+ | jsonify | safeJS }}
+</script>
 {{ end }}
 
 <!-- RSS -->

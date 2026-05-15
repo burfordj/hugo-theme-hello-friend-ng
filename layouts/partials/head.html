@@ -20,7 +20,15 @@
 <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}" />
 {{ end }}
 {{ end }}
-<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+{{ $xdefault := .Permalink }}
+{{ if .IsTranslated }}
+{{ range .Translations }}
+{{ if eq .Lang $.Site.DefaultContentLanguage }}
+{{ $xdefault = .Permalink }}
+{{ end }}
+{{ end }}
+{{ end }}
+<link rel="alternate" hreflang="x-default" href="{{ $xdefault }}" />
 
 {{ block "title" . }}
 <title>

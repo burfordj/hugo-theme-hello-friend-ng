@@ -5,6 +5,9 @@
 
 /* Main stuff */
 @import "variables";
+/* _bluehelios.scss is NOT in the theme — it is provided by the consuming site
+   (sites/main/assets/scss or sites/ai/assets/scss) via Hugo's union filesystem,
+   which overlays site assets on top of theme assets at build time. */
 @import "bluehelios";
 @import "mixins";
 @import "fonts";
